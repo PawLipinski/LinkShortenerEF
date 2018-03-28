@@ -1,0 +1,35 @@
+@model List<WebDevHomework.Models.Link>
+<div>
+    <div>
+        @using (Html.BeginForm("Create", "Link", FormMethod.Post))
+        {
+            <input type="text" name="FullUrl" placeholder="Full link"/> <br/>
+            <button type="submit">Add</button>
+        }
+    </div>
+
+    <div class="list">
+        <table>
+            @foreach(var item in Model) 
+            {
+                <tr>
+                    <td>
+                        <strong>Full link:</strong>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => item.FullUrl)
+                    </td>
+                    <td>
+                        <strong>Short link:</strong>
+                    </td>
+                    <td>
+                        @Html.ActionLink(item.ShortUrl, "RedirectToUrl", "Redirect", new { shortUrl = item.ShortUrl }, new {target="_blank"})
+                    </td>
+                    <td>
+                        | @Html.ActionLink("Delete", "Delete", "Link", new { linkId = item.Id })
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>  
