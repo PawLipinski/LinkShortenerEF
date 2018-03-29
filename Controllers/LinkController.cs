@@ -18,7 +18,7 @@ namespace WebDevHomework.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var alllinks = _linkReader.GetLinks();
+            var alllinks = _linkReader.GetLinks(10);
             return View(alllinks);
         }
 

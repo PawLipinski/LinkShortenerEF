@@ -10,6 +10,6 @@ namespace LinkShortenerEF
             
         }
 
-        public DbSet<Link> Stops { get; set; }
+        public DbSet<Link> Links { get; set; }
     }
 }

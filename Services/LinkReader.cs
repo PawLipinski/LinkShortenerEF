@@ -19,9 +19,9 @@ namespace WebDevHomework.Services
             return _linkRepository.GetFullLink(shortLink);
         }
 
-        public List<Link> GetLinks()
+        public List<Link> GetLinks(int count)
         {
-            return _linkRepository.GetLinks();
+            return (List<Link>)_linkRepository.Get(count).Item1;
         }
     }
 }

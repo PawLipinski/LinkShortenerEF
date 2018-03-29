@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LinkShortenerEF;
 using WebDevHomework.Interfaces;
 using WebDevHomework.Models;
 
@@ -8,43 +9,78 @@ namespace WebDevHomework.Repository
 {
     public class LinkRepository
     {
-        private readonly List<Link> _links;
+        private readonly LinkDbContext _context;
         private readonly IHashDecoder _hashDecoder;
         private readonly IHashEncoder _hashEncoder;
 
-        public LinkRepository(IHashDecoder hashDecoder, IHashEncoder hashEncoder)
+        public LinkRepository(LinkDbContext context, IHashDecoder hashDecoder, IHashEncoder hashEncoder)
         {
-            _links = new List<Link>();
+            _context = context;
             _hashDecoder = hashDecoder;
             _hashEncoder = hashEncoder;
         }
 
-        public List<Link> GetLinks()
+        public (IEnumerable<Link>, int) Get(int skip)
         {
-            return _links;
+            var links = _context.Links.ToList();
+            var linksCount = links.Count();
+
+            var paginatedLink = links
+                .OrderBy(x=> x.Id)
+                .Skip(skip)
+                .Take(20);
+
+            return (paginatedLink, linksCount);
         }
 
-        public void AddLink(Link link)
+        public Link GetLink(int Id)
         {
-            var random = new Random();
-            link.Id = random.Next(100000, 1000000);
-            // no hash collision check
-            // can generate same hash for different links
-            link.ShortUrl = _hashEncoder.Encode(link.Id);
-            _links.Add(link);
+            return _context.Links.Find(Id);
         }
 
-        public void DeleteLink(int linkId)
+        public Link Create(Link link)
         {
-            var itemToRemove = _links.SingleOrDefault(element => element.Id == linkId);
-            _links.Remove(itemToRemove);
+            _context.Links.Add(link);
+            _context.SaveChanges();
+            return link;
+        }
+
+        public void Delete(int linkId)
+        {
+            Link linkEntity = _context.Links.Find(linkId);
+            _context.Links.Remove(linkEntity);
+            _context.SaveChanges();
         }
 
         public string GetFullLink(string shortLink)
         {
             var id = _hashDecoder.Decode(shortLink);
-            return _links.SingleOrDefault(link => link.Id == id).FullUrl;
+            return _context.Links.SingleOrDefault(link => link.Id == id).FullUrl;
         }
+        
+        #region old
+        // public void AddLink(Link link)
+        // {
+        //     var random = new Random();
+        //     link.Id = random.Next(100000, 1000000);
+        //     // no hash collision check
+        //     // can generate same hash for different links
+        //     link.ShortUrl = _hashEncoder.Encode(link.Id);
+        //     _links.Add(link);
+        // }
+
+        // public void DeleteLink(int linkId)
+        // {
+        //     var itemToRemove = _links.SingleOrDefault(element => element.Id == linkId);
+        //     _links.Remove(itemToRemove);
+        // }
+
+        // public string GetFullLink(string shortLink)
+        // {
+        //     var id = _hashDecoder.Decode(shortLink);
+        //     return _links.SingleOrDefault(link => link.Id == id).FullUrl;
+        // }
+        #endregion
 
     }
 }

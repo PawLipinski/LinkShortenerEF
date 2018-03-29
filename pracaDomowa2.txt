@@ -1,0 +1,52 @@
+Praca domowa.
+
+- Bazując na poprzedniej pracy domowej dodaj obsługę bazy danych
+
++ Zdefiniuj DBContext
+
++ Zmodyfikuj repozytorium aby działało z bazą danych
+
+- Stwórz kontroler LinkApiController, który zwraca dane w formacie JSON. Wymagania kontrolera jak w poprzedniej pracy domowej.
+- Lista wszystkich linków ma być podzielone na strony podobnie jak w przykładzie na zajęciach.
+
+- Kontroler do przekierowania zostaje bez zmian
+
+- Dla chętnych:
+
++ zbieranie liczby kliknięć w link 
+Wskazówki: Tworzenie cookie po odwiedzeniu linku a potem sprawdzenie jeżeli ciastko istnieje to nie dodawaj nic do licznika lub logowanie w bazie adresów IP odwiedzających .
+https://www.youtube.com/watch?v=SsF7URvYhso
+http://edi.wang/post/2017/10/16/get-client-ip-aspnet-20
+
++ Dokeryzacja projektu
+
+
+Link do przykładów z zajęć. Notatka w README.md
+https://github.com/AkademiaWebDev/WebDev02-WebAPI
+
+
+
+--------------------------------------------------------------------------------------------------------------------------
+Cześć!
+Podczas mojego kodowania na żywo padło dość ważne pytanie o transkrypcję argumentu funkcji LInq na SQL.
+
+Zaznaczyłem argument o który chodzi na screenshot.
+
+Na drugim screenshot'cie macie co wpisałem w Swaggerze. 
+
+Na pierwszym screenshot'cie, terminal wydrukował jakie zapytanie SQL Entity Fremwork zbudował. 
+Czyli dokładnie tak jak mówiłem na wykładzie, 
+.Where(x => x.Name.ToLower() zostało zamienione na funkcję po stronie serwera bazy danych 
+Ale już wywołanie ToLower() na parametrze funkcji wydarzyło się w aplikacji i do zapytania został przekazany gotowy string.
+
+Wynik może być różny na innych bazach danych, inny adapter może to inaczej interpretować.
+
+Aby podejżeć jak wygląda zapytanie SQL, wystarczy, że dodacie rozszerzenie do IQueryable 
+https://gist.github.com/sebcza/601b97d6c4f31848a333d613d99db55f
+
+Później możecie wykonować metodę ToSql() na IQueryable<T> jak na screenshot'cie.
+
+Dziękuje bardzo osobie, która zadała to pytanie. Wprowadziła mnie ono w niepewność, więc moja wiedza nie było kompletna w tym temacie. Teraz i ja wynoszę wiedzę z tego wykładu :) Zapraszam osobę, która zadała pytanie, po kaczuchy na następnych zajęciach.
+
+------------------przykład rozwiązania pierwszej pracy domowej------------------------------
+https://github.com/AkademiaWebDev/WebDev01-Homework/
