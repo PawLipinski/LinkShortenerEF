@@ -15,12 +15,17 @@ namespace WebDevHomework.Controllers
         [HttpGet("/{shortUrl}")]
         public IActionResult RedirectToUrl(string shortUrl)
         {
-            var fullUrl = _linkReader.GetFullLink(shortUrl);
-            var lowercaselink = fullUrl.ToLower();
-            if(lowercaselink.Contains("http://") || lowercaselink.Contains("https://")){
-                return Redirect(fullUrl);
+            if(shortUrl!= "swagger")
+            {
+                var fullUrl = _linkReader.GetFullLink(shortUrl);
+                var lowercaselink = fullUrl.ToLower();
+                if(lowercaselink.Contains("http://") || lowercaselink.Contains("https://")){
+                    return Redirect(fullUrl);
+                }
+                return Redirect($"http://{fullUrl}");
             }
-            return Redirect($"http://{fullUrl}");
+            else return Redirect("Index" + "//swagger");
+
         }
     }
 }
