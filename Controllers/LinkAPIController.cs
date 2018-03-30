@@ -1,5 +1,8 @@
+using System.Linq;
+using LinkShortenerEF.Models;
 using LinkShortenerEF.Repository;
 using Microsoft.AspNetCore.Mvc;
+using WebDevHomework.Models;
 
 namespace LinkShortenerEF.Controllers
 {
@@ -15,17 +18,17 @@ namespace LinkShortenerEF.Controllers
 
         [HttpGet("{id}")]
         // GET api/stops/{id}
-        public IActionResult Get(int id)
+        public IActionResult Get(int id, bool isOneNeeded)
         {
-            return Ok(repository.Get(id));
+            return Ok(repository.Get(id, isOneNeeded));
         }
 
         //GET api/stops/?search={string}&page={int}
-        [HttpGet]
-        public IActionResult Get([FromQuery]GetStopRequest request)
+        [HttpGet("dupa")]
+        public IActionResult Get([FromQuery]GetLinkRequest request)
         {
-            var (stops, count) = repository
-                    .Get(request.Search, (request.Page.Value - 1) * itemPerPage);
+            var (links, count) = repository
+                    .Get((request.Page.Value - 1) * itemPerPage);
             var result = new SearchResult
             {
                 PageInfo = new PageInfo
@@ -33,7 +36,7 @@ namespace LinkShortenerEF.Controllers
                     CurrentPage = request.Page.Value,
                     MaxPage = count % itemPerPage == 0 ? count / itemPerPage : count / itemPerPage + 1
                 },
-                Items = stops.Select(x => new StopResult(x))
+                Items = links.Select(x => new LinkResult(x))
             };
             return Ok(result);
         }
@@ -47,15 +50,15 @@ namespace LinkShortenerEF.Controllers
         }
 
         //POST api/stops
-        [HttpPost]
-        public IActionResult Post([FromBody]CreateStopRequest createStop)
+        [HttpPost("wielki post")]
+        public IActionResult Post([FromBody]CreateLinkRequest createLink)
         {
-            return Ok(repository.Create(createStop.GetStop()));
+            return Ok(repository.Create(createLink.GetLink()));
         }
 
         //POST api/stops
         [HttpPut]
-        public IActionResult Put([FromBody]Stop stop)
+        public IActionResult Put([FromBody]Link stop)
         {
             return Ok(repository.Update(stop));
         }

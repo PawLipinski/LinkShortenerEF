@@ -6,7 +6,7 @@ namespace LinkShortenerEF.Repository
     public interface ILinkRepository
     {
         (IEnumerable<Link>, int) Get(int skip);
-        Link GetLink(int Id);
+        Link Get(int Id, bool isOneNeeded);
         Link Create(Link stop);
         Link Update(Link stop);
         void Delete(int id);    

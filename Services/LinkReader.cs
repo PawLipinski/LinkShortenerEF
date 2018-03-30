@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using WebDevHomework.Interfaces;
 using WebDevHomework.Models;
 using WebDevHomework.Repository;
@@ -21,7 +22,9 @@ namespace WebDevHomework.Services
 
         public List<Link> GetLinks(int count)
         {
-            return (List<Link>)_linkRepository.Get(count).Item1;
+            var (links,county) = _linkRepository.Get(count);
+            return links.ToList();
+            //return _linkRepository.Get(count).Item1;
         }
     }
 }
