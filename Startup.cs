@@ -6,10 +6,11 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using webdev.Interfaces;
-using webdev.Repository;
+using WebDevHomework.Interfaces;
+using WebDevHomework.Repository;
+using WebDevHomework.Services;
 
-namespace webdev
+namespace WebDevHomework
 {
     public class Startup
     {
@@ -20,12 +21,19 @@ namespace webdev
 
         public IConfiguration Configuration { get; }
 
+        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddSingleton<IBooksRepository, BooksRepository>();
+            services.AddSingleton<LinkRepository>();
+            services.AddSingleton<Hasher>();
+            services.AddTransient<ILinkReader, LinkReader>();
+            services.AddTransient<ILinkWriter, LinkWriter>();
+            services.AddTransient<IHashDecoder, Decoder>();
+            services.AddTransient<IHashEncoder, Encoder>();
         }
 
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
@@ -39,7 +47,7 @@ namespace webdev
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Book}/{action=Index}");
+                    template: "{controller=Link}/{action=Index}/{id?}");
             });
         }
     }
