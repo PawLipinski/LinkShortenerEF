@@ -42,6 +42,9 @@ namespace WebDevHomework.Repository
 
         public Link Create(Link link)
         {
+            var random = new Random();
+            link.Id = random.Next(100000, 1000000);
+            link.ShortUrl = _hashEncoder.Encode(link.Id);
             _context.Links.Add(link);
             _context.SaveChanges();
             return link;

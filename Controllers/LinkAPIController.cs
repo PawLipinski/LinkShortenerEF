@@ -24,7 +24,7 @@ namespace LinkShortenerEF.Controllers
         }
 
         //GET api/stops/?search={string}&page={int}
-        [HttpGet("dupa")]
+        [HttpGet]
         public IActionResult Get([FromQuery]GetLinkRequest request)
         {
             var (links, count) = repository
@@ -41,7 +41,7 @@ namespace LinkShortenerEF.Controllers
             return Ok(result);
         }
 
-        // DELETE api/stops/{id}
+        // DELETE api/links/{id}
         [HttpDelete]
         public IActionResult Delete(int id)
         {
@@ -49,14 +49,14 @@ namespace LinkShortenerEF.Controllers
             return Ok();
         }
 
-        //POST api/stops
-        [HttpPost("wielki post")]
+        //POST api/links
+        [HttpPost]
         public IActionResult Post([FromBody]CreateLinkRequest createLink)
         {
             return Ok(repository.Create(createLink.GetLink()));
         }
 
-        //POST api/stops
+        //POST api/links
         [HttpPut]
         public IActionResult Put([FromBody]Link stop)
         {

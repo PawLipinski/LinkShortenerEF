@@ -36,8 +36,6 @@ namespace WebDevHomework
             services.AddTransient<IHashEncoder, Encoder>();
             services.AddSwaggerGen(c => c.SwaggerDoc("v1", new Info{ Title = "Warsaw Stops API", Version = "v1" }));
             services.AddDbContext<LinkDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("LinkDbConnection")));       
-
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

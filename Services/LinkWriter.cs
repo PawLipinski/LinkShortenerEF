@@ -12,9 +12,9 @@ namespace WebDevHomework.Services
         {
             _linkRepository = linkRepository;
         }
-        public void AddLink(Link link)
+        public Link AddLink(Link link)
         {
-            _linkRepository.Create(link);
+            return _linkRepository.Create(link);
         }
 
         public void DeleteLink(int linkId)
