@@ -9,7 +9,7 @@ namespace LinkShortenerEF.Controllers
     {
         
         private readonly ILinkRepository repository;
-        private int itemPerPage = 10;
+        //private int itemPerPage = 10;
         public LinkAPIController(ILinkRepository repository)
         {
             this.repository = repository;

@@ -11,6 +11,7 @@ using WebDevHomework.Repository;
 using WebDevHomework.Services;
 using LinkShortenerEF;
 using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace WebDevHomework
 {
@@ -33,6 +34,7 @@ namespace WebDevHomework
             services.AddTransient<ILinkWriter, LinkWriter>();
             services.AddTransient<IHashDecoder, Decoder>();
             services.AddTransient<IHashEncoder, Encoder>();
+            services.AddSwaggerGen(c => c.SwaggerDoc("v1", new Info{ Title = "Link API", Version = "v1" }));
             services.AddDbContext<LinkDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("LinkDbConnection"))); 
         }
 
@@ -45,6 +47,11 @@ namespace WebDevHomework
             }
 
             app.UseStaticFiles();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Link API"));
+
+            //app.UseMvc();
 
             app.UseMvc(routes =>
             {
