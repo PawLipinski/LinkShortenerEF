@@ -4,10 +4,12 @@ using System.Linq;
 using LinkShortenerEF;
 using WebDevHomework.Interfaces;
 using WebDevHomework.Models;
+using LinkShortenerEF.Repository;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebDevHomework.Repository
 {
-    public class LinkRepository
+    public class LinkRepository : ILinkRepository
     {
         private readonly LinkDbContext _context;
         private readonly IHashDecoder _hashDecoder;
@@ -37,17 +39,26 @@ namespace WebDevHomework.Repository
             return link;
         }
 
-        public void DeleteLink(int linkId)
+        public Link DeleteLink(int linkId)
         {
             var itemToRemove = _context.Links.SingleOrDefault(element => element.Id == linkId);
             _context.Links.Remove(itemToRemove);
             _context.SaveChanges();
+            return itemToRemove;
         }
 
         public string GetFullLink(string shortLink)
         {
             var id = _hashDecoder.Decode(shortLink);
             return _context.Links.SingleOrDefault(link => link.Id == id).FullUrl;
+        }
+
+        public Link Update(Link link)
+        {
+            _context.Links.Attach(link);
+            _context.Entry(link).State = EntityState.Modified;
+            _context.SaveChanges();
+            return link;
         }
 
     }
