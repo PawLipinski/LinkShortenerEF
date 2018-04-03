@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using WebDevHomework.Interfaces;
 using WebDevHomework.Repository;
 using WebDevHomework.Services;
+using LinkShortenerEF;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebDevHomework
 {
@@ -25,12 +27,13 @@ namespace WebDevHomework
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddSingleton<LinkRepository>();
+            services.AddTransient<LinkRepository>();
             services.AddSingleton<Hasher>();
             services.AddTransient<ILinkReader, LinkReader>();
             services.AddTransient<ILinkWriter, LinkWriter>();
             services.AddTransient<IHashDecoder, Decoder>();
             services.AddTransient<IHashEncoder, Encoder>();
+            services.AddDbContext<LinkDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("LinkDbConnection"))); 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
