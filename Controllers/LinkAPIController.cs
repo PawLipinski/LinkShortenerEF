@@ -5,11 +5,12 @@ using WebDevHomework.Models;
 
 namespace LinkShortenerEF.Controllers
 {
+    [Route("api/links")]
     public class LinkAPIController : Controller
     {
         
         private readonly ILinkRepository repository;
-        //private int itemPerPage = 10;
+
         public LinkAPIController(ILinkRepository repository)
         {
             this.repository = repository;

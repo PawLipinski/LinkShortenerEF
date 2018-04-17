@@ -28,14 +28,24 @@ namespace WebDevHomework
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllHeaders",
+                builder =>
+                {
+                    builder.AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+                });
+            });
             services.AddTransient<LinkRepository>();
             services.AddSingleton<Hasher>();
             services.AddTransient<ILinkReader, LinkReader>();
             services.AddTransient<ILinkWriter, LinkWriter>();
             services.AddTransient<IHashDecoder, Decoder>();
             services.AddTransient<IHashEncoder, Encoder>();
-            services.AddSwaggerGen(c => c.SwaggerDoc("v1", new Info{ Title = "Link API", Version = "v1" }));
-            services.AddDbContext<LinkDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("LinkDbConnection"))); 
+            services.AddSwaggerGen(c => c.SwaggerDoc("v1", new Info { Title = "Link API", Version = "v1" }));
+            services.AddDbContext<LinkDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("LinkDbConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
