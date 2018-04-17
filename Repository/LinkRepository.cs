@@ -38,7 +38,22 @@ namespace WebDevHomework.Repository
             _context.SaveChanges();
             return link;
         }
+        
+        public (IEnumerable<Link>, int) Get(string search, int skip)
+        {
+            var stopsFilteredByName = search != null ? _context.Links
+            .Where(x => x.FullUrl.ToLower()
+            .Contains(search)) : _context.Links;
+            var stopsCount = stopsFilteredByName.Count();
 
+            var paginatedStop = stopsFilteredByName
+            .OrderBy(x => x.Id)
+            .Skip(skip)
+            .Take(20);
+
+            return (paginatedStop, stopsCount);
+        }
+        
         public Link DeleteLink(int linkId)
         {
             var itemToRemove = _context.Links.SingleOrDefault(element => element.Id == linkId);

@@ -7,6 +7,8 @@ namespace LinkShortenerEF.Repository
     {
         List<Link> GetLinks();
 
+        (IEnumerable<Link>, int) Get(string search, int skip);
+
         Link AddLink(Link link);
 
 

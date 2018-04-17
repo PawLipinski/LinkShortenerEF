@@ -1,3 +1,4 @@
+using System.Linq;
 using LinkShortenerEF.Models;
 using LinkShortenerEF.Repository;
 using Microsoft.AspNetCore.Mvc;
@@ -8,8 +9,9 @@ namespace LinkShortenerEF.Controllers
     [Route("api/links")]
     public class LinkAPIController : Controller
     {
-        
+
         private readonly ILinkRepository repository;
+        private int itemPerPage = 10;
 
         public LinkAPIController(ILinkRepository repository)
         {
@@ -19,7 +21,19 @@ namespace LinkShortenerEF.Controllers
         [HttpGet]
         public JsonResult Get([FromQuery]GetLinkRequest request)
         {
-            return Json(repository.GetLinks());
+            var (links, count) = repository
+                            .Get(request.Search, (request.Page.Value - 1) * itemPerPage);
+            var result = new SearchResult
+            {
+                PageInfo = new PageInfo
+                {
+                    CurrentPage = request.Page.Value,
+                    MaxPage = count % itemPerPage == 0 ? count / itemPerPage : count / itemPerPage + 1
+                },
+                Items = links.Select(x => new LinkResult(x))
+            };
+            //return Ok(result);
+            return Json(result);
         }
 
         // DELETE api/stops/{id}
