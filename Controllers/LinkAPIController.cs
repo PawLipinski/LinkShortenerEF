@@ -19,7 +19,7 @@ namespace LinkShortenerEF.Controllers
         }
 
         [HttpGet]
-        public JsonResult Get([FromQuery]GetLinkRequest request)
+        public IActionResult Get([FromQuery]GetLinkRequest request)
         {
             var (links, count) = repository
                             .Get(request.Search, (request.Page.Value - 1) * itemPerPage);
@@ -33,7 +33,7 @@ namespace LinkShortenerEF.Controllers
                 Items = links.Select(x => new LinkResult(x))
             };
             //return Ok(result);
-            return Json(result);
+            return Ok(result);
         }
 
         // DELETE api/stops/{id}
