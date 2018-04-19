@@ -20,7 +20,7 @@ namespace WebDevHomework.Services
 
         public int Decode(string hashedUrl)
         {
-            return _hashId.Decode(hashedUrl).First();
+            return _hashId.Decode(hashedUrl).FirstOrDefault();
         }
     }
 }

@@ -2,59 +2,58 @@ using System.Linq;
 using LinkShortenerEF.Models;
 using LinkShortenerEF.Repository;
 using Microsoft.AspNetCore.Mvc;
+using WebDevHomework.Interfaces;
 using WebDevHomework.Models;
 
 namespace LinkShortenerEF.Controllers
 {
-    [Route("api/links")]
+    [Route("/api/links")]
     public class LinkAPIController : Controller
     {
 
-        private readonly ILinkRepository repository;
-        private int itemPerPage = 10;
+        //private readonly ILinkRepository repository;
 
-        public LinkAPIController(ILinkRepository repository)
+        private readonly ILinkReader _linkReader;
+        private readonly ILinkWriter _linkWriter;
+        //private int itemPerPage = 10;
+
+        public LinkAPIController(ILinkReader reader, ILinkWriter writer)
         {
-            this.repository = repository;
+            this._linkReader = reader;
+            this._linkWriter = writer;
         }
 
         [HttpGet]
-        public IActionResult Get([FromQuery]GetLinkRequest request)
+        // public IActionResult Get()        
+        public IActionResult Index([FromQuery]GetLinkRequest request)
         {
-            var (links, count) = repository
-                            .Get(request.Search, (request.Page.Value - 1) * itemPerPage);
-            var result = new SearchResult
-            {
-                PageInfo = new PageInfo
-                {
-                    CurrentPage = request.Page.Value,
-                    MaxPage = count % itemPerPage == 0 ? count / itemPerPage : count / itemPerPage + 1
-                },
-                Items = links.Select(x => new LinkResult(x))
-            };
-            //return Ok(result);
+            var result = _linkReader.GetLinks(request.Page.Value);
+
             return Ok(result);
         }
 
-        // DELETE api/stops/{id}
+        // [HttpGet]
+        // public IActionResult Index(int? page = 1)
+        // {
+        //     var result = _linkReader.GetLinks(page.Value);
+        //     return Ok(result);
+        // }
+
+
         [HttpDelete]
-        public JsonResult Delete(int id)
+        public IActionResult Delete(int linkId)
         {
-            return Json(repository.DeleteLink(id));
+            _linkWriter.DeleteLink(linkId);
+            return Ok();
         }
 
-        //POST api/stops
+
         [HttpPost]
-        public IActionResult Post([FromBody]CreateLinkRequest createLink)
+        public IActionResult Create(Link link)
         {
-            return Json(repository.AddLink(createLink.GetLink()));
+            _linkWriter.AddLink(link);
+            return Ok(link);
         }
 
-        //POST api/stops
-        [HttpPut]
-        public JsonResult Put([FromBody]Link link)
-        {
-            return Json(repository.Update(link));
-        }
     }
 }

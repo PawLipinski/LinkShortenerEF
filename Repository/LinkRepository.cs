@@ -65,7 +65,7 @@ namespace WebDevHomework.Repository
         public string GetFullLink(string shortLink)
         {
             var id = _hashDecoder.Decode(shortLink);
-            return _context.Links.SingleOrDefault(link => link.Id == id).FullUrl;
+            return _context.Links.FirstOrDefault(link => link.Id == id).FullUrl;
         }
 
         public Link Update(Link link)
@@ -76,5 +76,16 @@ namespace WebDevHomework.Repository
             return link;
         }
 
+        public (IEnumerable<Link>, int) Get(int skip, int itemPerPage)
+        {
+            var linksCount = _context.Links.Count();
+
+            var paginatedLink = _context.Links
+            .OrderBy(x => x.Id)
+            .Skip(skip)
+            .Take(itemPerPage);
+
+            return (paginatedLink, linksCount);
+        }
     }
 }

@@ -38,14 +38,14 @@ namespace WebDevHomework
                 .AllowAnyMethod();
                 });
             });
-            services.AddTransient<LinkRepository>();
-            services.AddSingleton<Hasher>();
+            services.AddDbContext<LinkDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("LinkDbConnection")));
             services.AddTransient<ILinkReader, LinkReader>();
             services.AddTransient<ILinkWriter, LinkWriter>();
             services.AddTransient<IHashDecoder, Decoder>();
             services.AddTransient<IHashEncoder, Encoder>();
+            services.AddTransient<LinkRepository>();
+            services.AddSingleton<Hasher>();
             services.AddSwaggerGen(c => c.SwaggerDoc("v1", new Info { Title = "Link API", Version = "v1" }));
-            services.AddDbContext<LinkDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("LinkDbConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,6 +60,8 @@ namespace WebDevHomework
 
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Link API"));
+
+            app.UseCors("AllowAllHeaders");
 
             //app.UseMvc();
 
